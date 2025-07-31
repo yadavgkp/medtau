@@ -1,0 +1,74 @@
+/* User Management Page Specific Styles */
+
+/* User Management Header */
+.user-management-header {
+  background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* User Table */
+.user-table-container {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.user-table th {
+  background: var(--warm);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar-table {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.user-info-table .user-name-table {
+  font-weight: 600;
+}
+.user-info-table .user-email-table {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+/* Role Badge */
+.role-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.role-qmr { background: var(--danger); }
+.role-manager { background: var(--warning); }
+.role-employee { background: var(--info); }
+.role-trainee { background: var(--success); }

@@ -1,0 +1,135 @@
+/* Organization Page Specific Styles */
+
+/* Organization Header */
+.organization-header {
+  background: linear-gradient(135deg, var(--danger) 0%, var(--warning) 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Org Chart Container */
+.org-chart-container {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+/* Org Chart Styling */
+.org-chart {
+  display: flex;
+  justify-content: center;
+  min-width: 800px;
+}
+
+.org-chart ul {
+  padding-top: 20px;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.org-chart li {
+  float: left;
+  text-align: center;
+  list-style-type: none;
+  position: relative;
+  padding: 20px 5px 0 5px;
+  transition: all 0.5s;
+}
+
+/* Connectors */
+.org-chart li::before, .org-chart li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid var(--accent);
+  width: 50%;
+  height: 20px;
+}
+
+.org-chart li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--accent);
+}
+
+.org-chart li:only-child::after, .org-chart li:only-child::before {
+  display: none;
+}
+
+.org-chart li:only-child {
+  padding-top: 0;
+}
+
+.org-chart li:first-child::before, .org-chart li:last-child::after {
+  border: 0 none;
+}
+
+.org-chart li:last-child::before {
+  border-right: 2px solid var(--accent);
+  border-radius: 0 5px 0 0;
+}
+
+.org-chart li:first-child::after {
+  border-radius: 5px 0 0 0;
+}
+
+.org-chart ul ul::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid var(--accent);
+  width: 0;
+  height: 20px;
+}
+
+/* Node Styling */
+.org-chart .node {
+  border: 1px solid var(--border);
+  padding: 1rem;
+  display: inline-block;
+  border-radius: 12px;
+  min-width: 180px;
+  background: var(--gray-light);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.org-chart .node:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.org-chart .node .role {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.org-chart .node .name {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+/* Department Info */
+.department-info-container {
+    margin-top: 2rem;
+}
+.department-card-org {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    display: none; /* Hidden by default */
+}
+.department-card-org.active {
+    display: block;
+    animation: fadeIn 0.5s;
+}

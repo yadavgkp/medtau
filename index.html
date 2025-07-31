@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taube Med - Quality Management System</title>
   
-  <!-- External Dependencies -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-  <!-- Core Styles -->
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/components.css">
-  
-  <!-- Page-specific Styles -->
+  <link rel="stylesheet" href="assets/css/modal.css">
+
   <link rel="stylesheet" href="pages/dashboard/dashboard.css">
   <link rel="stylesheet" href="pages/products/products.css">
   <link rel="stylesheet" href="pages/improvements/improvements.css">
@@ -24,8 +22,7 @@
   <link rel="stylesheet" href="pages/user-management/user-management.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Login Page -->
+  <div id="appContainer" class="app-container">
     <div id="loginPage" class="login-page">
       <div class="login-bg-elements">
         <div class="bg-shape bg-shape-1"></div>
@@ -45,7 +42,7 @@
           <p class="brand-tagline">Quality Management System</p>
         </div>
         
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form id="loginForm" onsubmit="authModule.handleLogin(event)">
           <div class="form-group">
             <label class="form-label required">Email Address</label>
             <input type="email" class="form-input" id="loginEmail" required 
@@ -71,93 +68,90 @@
           <div style="margin-top: 1rem;">
             <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem;">Quick Role Switch (Demo):</p>
             <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="quickLogin('qmr')">QMR</button>
-              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="quickLogin('manager')">Manager</button>
-              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="quickLogin('employee')">Employee</button>
-              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="quickLogin('trainee')">Trainee</button>
+              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="authModule.quickLogin('qmr')">QMR</button>
+              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="authModule.quickLogin('manager')">Manager</button>
+              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="authModule.quickLogin('employee')">Employee</button>
+              <button type="button" class="btn btn-secondary" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" onclick="authModule.quickLogin('trainee')">Trainee</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Main Application -->
     <div id="mainApp" class="main-app hidden">
-      <!-- Header -->
       <header class="header">
-        <div class="header-left">
+        <div class="header-left-clickable" style="cursor: pointer;" onclick="TaubeMedQMS.navigateToPage('dashboard')">
           <div class="header-logo">
             <img src="assets/images/Taube_logo.png" alt="Taube Med Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <i class="fas fa-shield-alt" style="display: none; color: white; font-size: 1.2rem;"></i>
           </div>
           <h1 class="header-brand">Taube Med QMS</h1>
-          
+        </div>
+        
+        <div class="header-right">
           <div class="header-search">
             <i class="fas fa-search search-icon"></i>
             <input type="text" placeholder="Search anything..." id="globalSearch">
           </div>
-        </div>
-        
-        <div class="header-right">
-          <!-- Theme Switcher -->
+          
           <div class="theme-switcher">
-            <button class="theme-button" onclick="toggleThemeDropdown()" title="Change Theme">
+            <button class="theme-button" onclick="window.utils.ThemeManager.toggleThemeDropdown()" title="Change Theme">
               <i class="fas fa-palette"></i>
             </button>
             <div class="theme-dropdown" id="themeDropdown">
-              <div class="theme-option active" onclick="setTheme('default')" data-theme="default">
+              <div class="theme-option active" onclick="window.utils.ThemeManager.setTheme('default')" data-theme="default">
                 <div class="theme-preview theme-preview-default"></div>
                 <span>Default</span>
               </div>
-              <div class="theme-option" onclick="setTheme('warm')" data-theme="warm">
+              <div class="theme-option" onclick="window.utils.ThemeManager.setTheme('warm')" data-theme="warm">
                 <div class="theme-preview theme-preview-warm"></div>
                 <span>Warm Earth</span>
               </div>
-              <div class="theme-option" onclick="setTheme('cool')" data-theme="cool">
+              <div class="theme-option" onclick="window.utils.ThemeManager.setTheme('cool')" data-theme="cool">
                 <div class="theme-preview theme-preview-cool"></div>
                 <span>Cool Blue</span>
               </div>
-              <div class="theme-option" onclick="setTheme('professional')" data-theme="professional">
+              <div class="theme-option" onclick="window.utils.ThemeManager.setTheme('professional')" data-theme="professional">
                 <div class="theme-preview theme-preview-professional"></div>
                 <span>Professional</span>
               </div>
             </div>
           </div>
           
-          <!-- Notifications -->
-          <button class="notification-btn" onclick="showNotifications()">
+          <button class="notification-btn" onclick="window.notificationModule.showSystemAnnouncement('Notifications', 'This is a demo notification panel.')">
             <i class="fas fa-bell"></i>
             <span class="notification-badge">3</span>
           </button>
           
-          <!-- User Menu -->
-          <div class="user-menu" onclick="toggleUserDropdown()">
-            <div class="user-avatar" id="userAvatar">QM</div>
-            <div class="user-info">
-              <div class="user-name" id="userName">Quality Manager</div>
-              <div class="user-role" id="userRole">QMR - Full Access</div>
+          <div class="user-menu">
+            <div class="user-avatar-container" onclick="window.TaubeMedQMS.toggleUserDropdown()">
+                <div class="user-avatar" id="userAvatar">QM</div>
+                <div class="user-info">
+                  <div class="user-name" id="userName">Quality Manager</div>
+                  <div class="user-role" id="userRole">QMR - Full Access</div>
+                </div>
+                <i class="fas fa-chevron-down" style="color: var(--gray); font-size: 0.8rem;"></i>
             </div>
-            <i class="fas fa-chevron-down" style="color: var(--gray); font-size: 0.8rem;"></i>
             
             <div class="user-dropdown" id="userDropdown">
-              <div class="user-dropdown-item" onclick="viewProfile()">
+              <div class="user-dropdown-item" onclick="authModule.viewProfile()">
                 <i class="fas fa-user"></i>
                 <span>My Profile</span>
               </div>
-              <div class="user-dropdown-item" onclick="userSettings()">
+              <div class="user-dropdown-item" onclick="authModule.userSettings()">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
               </div>
-              <div class="user-dropdown-item" onclick="viewActivity()">
+              <div class="user-dropdown-item" onclick="authModule.viewActivity()">
                 <i class="fas fa-history"></i>
                 <span>Activity Log</span>
               </div>
-              <div class="user-dropdown-item" onclick="helpCenter()">
+              <div class="user-dropdown-item" onclick="authModule.helpCenter()">
                 <i class="fas fa-question-circle"></i>
                 <span>Help Center</span>
               </div>
               <div class="user-dropdown-divider"></div>
-              <div class="user-dropdown-item danger" onclick="logout()">
+              <div class="user-dropdown-item danger" onclick="authModule.logout()">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
               </div>
@@ -166,31 +160,25 @@
         </div>
       </header>
 
-      <!-- Navigation -->
       <nav class="nav-container">
+        <div id="breadcrumbs" class="breadcrumbs"></div>
         <div class="nav" id="mainNavigation">
-          <!-- Navigation will be populated based on user role -->
-        </div>
+          </div>
       </nav>
 
-      <!-- Content Area -->
       <main class="content" id="mainContent">
-        <!-- Pages will be loaded here dynamically -->
-      </main>
+        </main>
     </div>
   </div>
+  
+  <div id="modalContainer"></div>
 
-  <!-- Notification Container -->
-  <div id="notificationContainer"></div>
-
-  <!-- Core JavaScript -->
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/utils.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/navigation.js"></script>
-  <script src="assets/js/utils.js"></script>
-  <script src="assets/js/notifications.js"></script>
   
-  <!-- Page-specific JavaScript -->
   <script src="pages/dashboard/dashboard.js"></script>
   <script src="pages/products/products.js"></script>
   <script src="pages/improvements/improvements.js"></script>
@@ -199,12 +187,5 @@
   <script src="pages/organization/organization.js"></script>
   <script src="pages/reports/reports.js"></script>
   <script src="pages/user-management/user-management.js"></script>
-
-  <script>
-    // Initialize application when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeApp();
-    });
-  </script>
 </body>
 </html>

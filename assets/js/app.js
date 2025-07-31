@@ -28,7 +28,16 @@ const USER_ROLES = {
   },
   manager: {
     name: 'Department Manager',
-    permissions: ['view_all', 'manage_department', 'assign_tasks'],
+    permissions: [
+        'manage_department', 
+        'assign_tasks',
+        'view_dashboard',
+        'view_products',
+        'view_improvements',
+        'view_training',
+        'view_documents',
+        'view_reports'
+    ],
     navigation: [
       'dashboard', 
       'products', 
@@ -41,7 +50,13 @@ const USER_ROLES = {
   },
   employee: {
     name: 'Employee',
-    permissions: ['view_assigned', 'complete_tasks', 'view_training'],
+    permissions: [
+        'complete_tasks',
+        'view_dashboard',
+        'view_my-tasks',
+        'view_training',
+        'view_documents'
+    ],
     navigation: [
       'dashboard', 
       'my-tasks', 
@@ -52,7 +67,12 @@ const USER_ROLES = {
   },
   trainee: {
     name: 'Trainee',
-    permissions: ['view_basic', 'complete_training'],
+    permissions: [
+        'complete_training',
+        'view_dashboard',
+        'view_training',
+        'view_basic-documents'
+    ],
     navigation: [
       'dashboard', 
       'training', 
@@ -135,12 +155,13 @@ function updateUserInterface() {
   
   const userAvatar = document.getElementById('userAvatar');
   const userName = document.getElementById('userName');
-  const userRole = document.getElementById('userRole');
+  const userRoleEl = document.getElementById('userRole');
   
   if (userAvatar) userAvatar.textContent = currentUser.initials;
   if (userName) userName.textContent = currentUser.name;
-  if (userRole) userRole.textContent = USER_ROLES[currentUser.role].name;
+  if (userRoleEl) userRoleEl.textContent = USER_ROLES[currentUser.role].name;
 }
+
 
 /**
  * Initialize navigation based on user role
@@ -154,22 +175,15 @@ function initializeNavigation() {
   nav.innerHTML = userNav.map(item => {
     const navItem = NAV_ITEMS[item];
     return `
-      <div class="nav-item ${item === 'dashboard' ? 'active' : ''}" data-page="${item}">
+      <div class="nav-item ${item === 'dashboard' ? 'active' : ''}" data-page="${item}" onclick="TaubeMedQMS.navigateToPage('${item}')">
         <i class="fas ${navItem.icon}"></i>
-        ${navItem.label}
+        <span class="nav-label">${navItem.label}</span>
         ${navItem.badge ? `<span class="nav-badge">${navItem.badge}</span>` : ''}
       </div>
     `;
   }).join('');
-  
-  // Add click handlers
-  nav.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', function() {
-      const page = this.getAttribute('data-page');
-      navigateToPage(page);
-    });
-  });
 }
+
 
 /**
  * Navigate to a specific page
@@ -192,9 +206,13 @@ function navigateToPage(page) {
   
   // Close any open dropdowns
   closeAllDropdowns();
+
+  // Dispatch navigation event for other modules to listen to
+  window.dispatchEvent(new CustomEvent('navigation-changed', { detail: { page } }));
   
-  console.log(`Navigated to: ${page}`);
+  console.log(`Mapsd to: ${page}`);
 }
+
 
 /**
  * Update navigation visual state
@@ -222,14 +240,14 @@ async function loadPageContent(page) {
   // Show loading state
   content.innerHTML = `
     <div class="loading">
-      <i class="fas fa-spinner"></i>
+      <i class="fas fa-spinner fa-spin"></i>
       Loading ${page.charAt(0).toUpperCase() + page.slice(1)}...
     </div>
   `;
   
   try {
-    // Call page-specific initialization function
-    const initFunctionName = `initialize${page.charAt(0).toUpperCase() + page.slice(1).replace('-', '')}`;
+    // Dynamically create function name from page id (e.g., 'user-management' -> 'UserManagement')
+    const initFunctionName = `initialize${page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')}`;
     
     if (typeof window[initFunctionName] === 'function') {
       await window[initFunctionName]();
@@ -245,8 +263,6 @@ async function loadPageContent(page) {
           </div>
           <div class="card">
             <p>This ${page} module is under development.</p>
-            <p><strong>Current User Role:</strong> ${USER_ROLES[userRole].name}</p>
-            <p><strong>Permissions:</strong> ${currentUser.permissions.join(', ')}</p>
           </div>
         </div>
       `;
@@ -268,6 +284,7 @@ async function loadPageContent(page) {
     `;
   }
 }
+
 
 /**
  * Check if current user has specific permission
@@ -316,14 +333,6 @@ function setupGlobalSearch() {
       performGlobalSearch(this.value);
     }
   });
-  
-  // Add search suggestions (future enhancement)
-  searchInput.addEventListener('input', function() {
-    const query = this.value;
-    if (query.length > 2) {
-      // Implement search suggestions
-    }
-  });
 }
 
 /**
@@ -334,19 +343,17 @@ function performGlobalSearch(query) {
   
   console.log(`Performing global search: ${query}`);
   showNotification(`Searching for: "${query}"`, 'info');
-  
-  // Future implementation: search across all modules
-  // This would call search functions from each loaded module
 }
 
 /**
  * Close all open dropdowns
  */
 function closeAllDropdowns() {
-  document.querySelectorAll('.theme-dropdown, .user-dropdown, .export-menu').forEach(dropdown => {
+  document.querySelectorAll('.theme-dropdown.show, .user-dropdown.show').forEach(dropdown => {
     dropdown.classList.remove('show');
   });
 }
+
 
 /**
  * Close all open modals
@@ -364,23 +371,10 @@ function closeAllModals() {
 function loadUserPreferences() {
   try {
     const savedTheme = localStorage.getItem('taube-theme') || 'default';
-    const savedUser = localStorage.getItem('taube-user');
     
     // Apply saved theme
-    setTheme(savedTheme);
+    window.utils.ThemeManager.setTheme(savedTheme);
     
-    // Restore user session if available
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      // Only restore if login was recent (within 24 hours)
-      const loginTime = new Date(userData.loginTime);
-      const now = new Date();
-      const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
-      
-      if (hoursDiff < 24) {
-        setCurrentUser(userData.role, userData.name, userData.initials, userData.email);
-      }
-    }
   } catch (error) {
     console.warn('Error loading user preferences:', error);
   }
@@ -407,80 +401,18 @@ function initializeThemeSystem() {
   console.log('Theme system initialized');
 }
 
-/**
- * Utility function to format dates consistently
- */
-function formatDate(dateString, format = 'short') {
-  if (!dateString) return '-';
-  
-  const date = new Date(dateString);
-  
-  switch (format) {
-    case 'short':
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-    case 'long':
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    case 'time':
-      return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    default:
-      return date.toLocaleDateString();
-  }
-}
-
-/**
- * Utility function to animate counters
- */
-function animateCounters() {
-  const counters = document.querySelectorAll('[data-count]');
-  
-  counters.forEach(counter => {
-    const target = parseInt(counter.getAttribute('data-count'));
-    const duration = 2000;
-    const start = performance.now();
-    
-    const updateCounter = (currentTime) => {
-      const elapsed = currentTime - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = Math.floor(easeOut * target);
-      
-      counter.textContent = current;
-      
-      if (progress < 1) {
-        requestAnimationFrame(updateCounter);
-      } else {
-        counter.textContent = target;
-      }
-    };
-    
-    requestAnimationFrame(updateCounter);
-  });
-}
 
 /**
  * Utility function to animate progress bars
  */
 function animateProgressBars() {
-  const bars = document.querySelectorAll('[data-width]');
+  const bars = document.querySelectorAll('.progress-fill[data-width]');
   
   bars.forEach((bar, index) => {
     setTimeout(() => {
       const width = bar.getAttribute('data-width');
       bar.style.width = width;
-    }, index * 200);
+    }, index * 50); // Reduced delay for faster feedback
   });
 }
 
@@ -488,19 +420,24 @@ function animateProgressBars() {
  * Utility function to animate progress circles
  */
 function animateProgressCircles() {
-  const circles = document.querySelectorAll('.progress-fill[data-progress]');
-  
-  circles.forEach((circle, index) => {
-    setTimeout(() => {
-      const progress = parseInt(circle.getAttribute('data-progress'));
-      const circumference = 2 * Math.PI * 45; // radius = 45
-      const offset = circumference - (progress / 100) * circumference;
-      
-      circle.style.strokeDasharray = circumference;
-      circle.style.strokeDashoffset = offset;
-    }, index * 300);
-  });
+    const circles = document.querySelectorAll('.progress-fill[data-progress]');
+    circles.forEach(circle => {
+        const progress = circle.dataset.progress;
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (progress / 100) * circumference;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+        // Trigger reflow to apply initial styles before transition
+        circle.getBoundingClientRect(); 
+        
+        // Apply transition and final state
+        circle.style.transition = 'stroke-dashoffset 1.5s ease-out';
+        circle.style.strokeDashoffset = offset;
+    });
 }
+
 
 /**
  * Export global functions for use by other modules
@@ -515,8 +452,6 @@ window.TaubeMedQMS = {
   closeAllModals,
   
   // Utility functions
-  formatDate,
-  animateCounters,
   animateProgressBars,
   animateProgressCircles,
   
@@ -524,11 +459,15 @@ window.TaubeMedQMS = {
   getCurrentUser: () => currentUser,
   getCurrentPage: () => currentPage,
   getUserRole: () => userRole,
-  getUserRoles: () => USER_ROLES,
   
   // Preferences
   saveUserPreferences,
-  loadUserPreferences
+  loadUserPreferences,
+
+  // Direct access for simple toggles
+  toggleUserDropdown: () => {
+    document.getElementById('userDropdown')?.classList.toggle('show');
+  },
 };
 
 // Auto-initialize when DOM is loaded

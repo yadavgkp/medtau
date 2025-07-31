@@ -1,0 +1,306 @@
+/* Reusable Components for Taube Med QMS */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: color-mix(in srgb, var(--primary), #000 10%);
+}
+
+.btn-secondary {
+  background-color: var(--gray-light);
+  color: var(--primary);
+  border-color: var(--border);
+}
+.btn-secondary:hover {
+  background-color: var(--border);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+}
+.btn-danger:hover {
+    background-color: color-mix(in srgb, var(--danger), #000 10%);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary), transparent 80%);
+}
+
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+
+/* Status Badges */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.status-badge.status-approved, .status-badge.status-active, .status-badge.status-completed {
+    background: color-mix(in srgb, var(--success), transparent 85%);
+    color: var(--success);
+}
+.status-badge.status-in-review, .status-badge.status-in-progress {
+    background: color-mix(in srgb, var(--warning), transparent 85%);
+    color: color-mix(in srgb, var(--warning), #000 40%);
+}
+.status-badge.status-draft, .status-badge.status-inactive, .status-badge.status-pending, .status-badge.status-planned {
+    background: color-mix(in srgb, var(--gray), transparent 85%);
+    color: var(--gray);
+}
+.status-badge.status-overdue {
+    background: color-mix(in srgb, var(--danger), transparent 85%);
+    color: var(--danger);
+}
+
+/* Modals */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.95);
+  transition: transform 0.3s;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* Login Page Specific */
+.login-page {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 450px;
+    z-index: 2;
+}
+
+.login-card.animate-in {
+    animation: fadeIn 0.6s ease-out both;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: var(--gradient);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo img, .logo-fallback {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+.logo-fallback {
+    color: white;
+    font-size: 2.5rem;
+}
+
+.brand-name {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+.brand-tagline {
+    color: var(--gray);
+}
+
+/* User Menu Dropdown */
+.user-menu {
+    position: relative;
+}
+.user-avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+.user-avatar-container:hover {
+    background: var(--gray-light);
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+.user-name {
+    font-weight: 600;
+}
+.user-role {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    width: 220px;
+    z-index: 101;
+    overflow: hidden;
+    display: none;
+}
+.user-dropdown.show {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+}
+.user-dropdown-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+.user-dropdown-item:hover {
+    background: var(--gray-light);
+}
+.user-dropdown-item.danger:hover {
+    background: color-mix(in srgb, var(--danger), transparent 90%);
+    color: var(--danger);
+}
+.user-dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0.5rem 0;
+}

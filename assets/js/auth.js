@@ -83,11 +83,12 @@ function authenticateUser(email, password, submitBtn, originalText) {
   } else if (email && password) {
     // For demo purposes, allow any email/password combination
     authSuccess = true;
+    const name = email.split('@')[0].replace('.', ' ').split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     userData = {
       role: 'employee',
-      name: email.split('@')[0].replace('.', ' ').split(' ').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      initials: email.substring(0, 2).toUpperCase()
+      name: name,
+      initials: name.split(' ').map(n => n[0]).join('')
     };
   }
   
@@ -110,13 +111,6 @@ function authenticateUser(email, password, submitBtn, originalText) {
     // Show success notification
     showNotification(`Welcome back, ${userData.name}!`, 'success');
     
-    // Log successful login
-    console.log('Login successful:', {
-      email: email,
-      role: userData.role,
-      timestamp: new Date()
-    });
-    
   } else {
     // Increment failed attempts
     authAttempts++;
@@ -130,13 +124,6 @@ function authenticateUser(email, password, submitBtn, originalText) {
     
     // Clear password field
     document.getElementById('loginPassword').value = '';
-    
-    // Log failed attempt
-    console.warn('Login failed:', {
-      email: email,
-      attempts: authAttempts,
-      timestamp: new Date()
-    });
   }
 }
 
@@ -157,10 +144,7 @@ function quickLogin(role) {
     document.getElementById('loginPassword').value = user.password;
     
     // Trigger login
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-      loginForm.dispatchEvent(new Event('submit'));
-    }
+    document.getElementById('loginForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
   }
 }
 
@@ -179,15 +163,8 @@ function showMainApplication() {
       loginPage.classList.add('hidden');
       mainApp.classList.remove('hidden');
       
-      // Initialize app if not already done
-      if (typeof initializeApp === 'function') {
-        initializeApp();
-      }
-      
       // Load initial dashboard
-      if (typeof navigateToPage === 'function') {
-        navigateToPage('dashboard');
-      }
+      navigateToPage('dashboard');
       
     }, 300);
   }
@@ -203,10 +180,6 @@ function logout() {
   }
   
   try {
-    // Clear authentication state
-    isAuthenticated = false;
-    authAttempts = 0;
-    
     // Clear global user state
     currentUser = null;
     userRole = null;
@@ -220,20 +193,13 @@ function logout() {
     // Show logout notification
     showNotification('You have been logged out successfully.', 'info');
     
-    // Log logout
-    console.log('User logged out:', {
-      timestamp: new Date()
-    });
-    
   } catch (error) {
     console.error('Error during logout:', error);
     showNotification('An error occurred during logout', 'error');
   }
   
   // Close any open dropdowns
-  if (typeof closeAllDropdowns === 'function') {
-    closeAllDropdowns();
-  }
+  closeAllDropdowns();
 }
 
 /**
@@ -249,16 +215,10 @@ function showLoginPage() {
     loginPage.style.opacity = '1';
     
     // Reset login form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-      loginForm.reset();
-    }
+    document.getElementById('loginForm')?.reset();
     
     // Focus on email field
-    const emailField = document.getElementById('loginEmail');
-    if (emailField) {
-      setTimeout(() => emailField.focus(), 300);
-    }
+    setTimeout(() => document.getElementById('loginEmail')?.focus(), 300);
   }
 }
 
@@ -272,14 +232,8 @@ function saveAuthState() {
       loginTime: new Date().toISOString(),
       userEmail: currentUser?.email
     };
-    
     localStorage.setItem('taube-auth', JSON.stringify(authData));
-    
-    // Also save user preferences
-    if (typeof saveUserPreferences === 'function') {
-      saveUserPreferences();
-    }
-    
+    saveUserPreferences();
   } catch (error) {
     console.warn('Could not save auth state:', error);
   }
@@ -292,7 +246,8 @@ function clearAuthState() {
   try {
     localStorage.removeItem('taube-auth');
     localStorage.removeItem('taube-user');
-    localStorage.removeItem('taube-theme'); // Optional: keep theme preference
+    // Optional: keep theme preference by not removing it
+    // localStorage.removeItem('taube-theme');
   } catch (error) {
     console.warn('Could not clear auth state:', error);
   }
@@ -306,15 +261,12 @@ function checkAuthState() {
     const authData = localStorage.getItem('taube-auth');
     if (!authData) return false;
     
-    const { isAuthenticated, loginTime, userEmail } = JSON.parse(authData);
+    const { isAuthenticated, loginTime } = JSON.parse(authData);
     
     // Check if login is recent (within 24 hours)
-    const loginDate = new Date(loginTime);
-    const now = new Date();
-    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+    const hoursDiff = (new Date() - new Date(loginTime)) / 36e5;
     
     if (isAuthenticated && hoursDiff < 24) {
-      // Try to restore user session
       const savedUser = localStorage.getItem('taube-user');
       if (savedUser) {
         const userData = JSON.parse(savedUser);
@@ -348,90 +300,30 @@ function autoLogin() {
 }
 
 /**
- * Session timeout handler
- */
-function handleSessionTimeout() {
-  if (isAuthenticated) {
-    showNotification('Your session has expired. Please login again.', 'warning');
-    logout();
-  }
-}
-
-/**
  * User profile management
  */
 function viewProfile() {
   if (!currentUser) return;
-  
-  showNotification('Opening user profile...', 'info');
-  
-  // Future implementation: show user profile modal
-  console.log('User profile:', currentUser);
+  showNotification('Opening user profile... (Demo)', 'info');
 }
-
-/**
- * User settings management
- */
 function userSettings() {
-  showNotification('Opening user settings...', 'info');
-  
-  // Future implementation: show settings modal
+  showNotification('Opening user settings... (Demo)', 'info');
 }
-
-/**
- * View user activity log
- */
 function viewActivity() {
-  showNotification('Loading activity log...', 'info');
-  
-  // Future implementation: show activity log
+  showNotification('Loading activity log... (Demo)', 'info');
 }
-
-/**
- * Open help center
- */
 function helpCenter() {
-  showNotification('Opening help center...', 'info');
-  
-  // Future implementation: open help system
-  window.open('https://help.taubemed.com', '_blank');
-}
-
-/**
- * Password reset functionality
- */
-function resetPassword(email) {
-  if (!email) {
-    showNotification('Please enter your email address', 'error');
-    return;
-  }
-  
-  showNotification('Password reset instructions sent to your email', 'success');
-  
-  // Future implementation: actual password reset
-  console.log('Password reset requested for:', email);
+  showNotification('Opening help center... (Demo)', 'info');
+  window.open('https://www.google.com/search?q=help', '_blank');
 }
 
 /**
  * Initialize authentication system
  */
 function initializeAuth() {
-  // Try auto-login first
   if (!autoLogin()) {
-    // Show login page if no valid session
     showLoginPage();
   }
-  
-  // Setup session timeout (24 hours)
-  setTimeout(handleSessionTimeout, 24 * 60 * 60 * 1000);
-  
-  // Setup periodic session check (every hour)
-  setInterval(() => {
-    if (!checkAuthState() && isAuthenticated) {
-      handleSessionTimeout();
-    }
-  }, 60 * 60 * 1000);
-  
   console.log('Authentication system initialized');
 }
 
@@ -444,8 +336,6 @@ window.authModule = {
   userSettings,
   viewActivity,
   helpCenter,
-  resetPassword,
-  checkAuthState,
   isAuthenticated: () => isAuthenticated
 };
 
