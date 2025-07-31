@@ -1,0 +1,487 @@
+/* Dashboard Specific Styles */
+
+/* Dashboard Grid Layouts */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-overview {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Department Overview */
+.department-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.department-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.department-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.department-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.department-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--gradient);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.department-info h3 {
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.department-meta {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+/* Task Overview */
+.task-overview {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.task-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  background: var(--gray-light);
+  transition: all 0.3s;
+}
+
+.task-item:hover {
+  background: var(--warm);
+}
+
+.task-priority {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.priority-critical { background: var(--danger); }
+.priority-high { background: var(--warning); }
+.priority-medium { background: var(--info); }
+.priority-low { background: var(--success); }
+
+.task-content {
+  flex: 1;
+}
+
+.task-title {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.task-meta {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+.task-assignee {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Attention Cards */
+.attention-card {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.attention-card.critical {
+  background: rgba(220, 38, 38, 0.1);
+  border-left: 4px solid var(--danger);
+}
+
+.attention-card.warning {
+  background: rgba(217, 119, 6, 0.1);
+  border-left: 4px solid var(--warning);
+}
+
+.attention-card.info {
+  background: rgba(2, 132, 199, 0.1);
+  border-left: 4px solid var(--info);
+}
+
+.attention-card-icon {
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.attention-card.critical .attention-card-icon {
+  color: var(--danger);
+}
+
+.attention-card.warning .attention-card-icon {
+  color: var(--warning);
+}
+
+.attention-card.info .attention-card-icon {
+  color: var(--info);
+}
+
+.attention-card-content {
+  flex: 1;
+}
+
+.attention-card-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.attention-card.critical .attention-card-title {
+  color: var(--danger);
+}
+
+.attention-card.warning .attention-card-title {
+  color: var(--warning);
+}
+
+.attention-card.info .attention-card-title {
+  color: var(--info);
+}
+
+.attention-card-description {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Role-specific Dashboard Views */
+.qmr-view .stat-card::before { 
+  background: linear-gradient(45deg, var(--danger), var(--warning)); 
+}
+
+.manager-view .stat-card::before { 
+  background: linear-gradient(45deg, var(--warning), var(--info)); 
+}
+
+.employee-view .stat-card::before { 
+  background: linear-gradient(45deg, var(--info), var(--success)); 
+}
+
+.trainee-view .stat-card::before { 
+  background: linear-gradient(45deg, var(--success), var(--primary)); 
+}
+
+/* Widget Grid */
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.widget {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.widget-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.widget-action {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.widget-action:hover {
+  text-decoration: underline;
+}
+
+/* Performance Metrics */
+.performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.performance-metric {
+  text-align: center;
+  padding: 1rem;
+  background: var(--warm);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.metric-trend {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.metric-trend.positive {
+  color: var(--success);
+}
+
+.metric-trend.negative {
+  color: var(--danger);
+}
+
+/* Recent Activity Feed */
+.activity-feed {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-text {
+  color: var(--primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.activity-time {
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+/* Charts and Visualizations */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin: 1rem 0;
+}
+
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--gray-light);
+  border-radius: 12px;
+  color: var(--gray);
+  flex-direction: column;
+}
+
+.chart-placeholder i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* System Health Indicators */
+.health-indicators {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.health-indicator {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.health-indicator.healthy {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: var(--success);
+}
+
+.health-indicator.warning {
+  background: rgba(217, 119, 6, 0.1);
+  border-color: var(--warning);
+}
+
+.health-indicator.critical {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: var(--danger);
+}
+
+.health-indicator-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.health-indicator.healthy .health-indicator-icon {
+  color: var(--success);
+}
+
+.health-indicator.warning .health-indicator-icon {
+  color: var(--warning);
+}
+
+.health-indicator.critical .health-indicator-icon {
+  color: var(--danger);
+}
+
+.health-indicator-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+/* Responsive Dashboard */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .widget-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-overview {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-overview h1 {
+    font-size: 2rem;
+  }
+  
+  .department-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .health-indicators {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .task-assignee {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .performance-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .health-indicators {
+    grid-template-columns: 1fr;
+  }
+  
+  .department-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}
